@@ -374,7 +374,7 @@ fun ExpandedPlayerContent(
 
                         val listState = rememberLazyGridState()
                         
-                        // Track scroll state for swipe detection (Metrolist approach)
+                        // Track scroll state for swipe detection (PixPlay approach)
                         val currentVisibleItem by remember { derivedStateOf { listState.firstVisibleItemIndex } }
                         val itemScrollOffset by remember { derivedStateOf { listState.firstVisibleItemScrollOffset } }
                         
@@ -389,7 +389,7 @@ fun ExpandedPlayerContent(
                              }
                         }
 
-                        // Swipe Logic - Metrolist approach: trigger when item snaps to center during scroll
+                        // Swipe Logic - PixPlay approach: trigger when item snaps to center during scroll
                         LaunchedEffect(itemScrollOffset) {
                             android.util.Log.d("ExpandedPlayer", "Swipe check: offset=$itemScrollOffset, scrolling=${listState.isScrollInProgress}, enabled=$swipeGesturesEnabled, windowIndex=$windowCurrentIndex, visible=$currentVisibleItem")
                             

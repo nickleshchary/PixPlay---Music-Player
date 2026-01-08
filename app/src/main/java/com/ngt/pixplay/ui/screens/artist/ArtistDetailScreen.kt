@@ -54,7 +54,7 @@ fun ArtistDetailScreen(
     val density = LocalDensity.current
     
     // Calculate header parallax and transparency logic
-    // Using a simpler approach than Metrolist's rigid offset for now, but keeping the visual spirit
+    // Using a simpler approach than PixPlay's rigid offset for now, but keeping the visual spirit
     val firstItemTranslationY by remember {
         derivedStateOf {
             if (scrollState.firstVisibleItemIndex == 0) {
@@ -122,7 +122,7 @@ fun ArtistDetailScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(380.dp) // Large header like Metrolist
+                                .height(380.dp) // Large header like PixPlay
                                 .graphicsLayer {
                                     translationY = firstItemTranslationY
                                 }
@@ -186,7 +186,7 @@ fun ArtistDetailScreen(
                                 
                                 Spacer(modifier = Modifier.height(16.dp))
                                 
-                                // Action Buttons - Metrolist style
+                                // Action Buttons - PixPlay style
                                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                     // Play All
                                     FilledTonalButton(
