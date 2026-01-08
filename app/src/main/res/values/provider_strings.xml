@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="provider_type_local">This Device</string>
+    <string name="provider_type_subsonic">Subsonic</string>
+    <string name="provider_type_jellyfin">Jellyfin</string>
+    <string name="provider_arg_server">Server Address</string>
+    <string name="provider_arg_username">Username</string>
+    <string name="provider_arg_password">Password</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="manage_providers">Manage Providers</string>
+    <string name="add_provider">Add Provider</string>
+    <string name="no_provider">No Provider Selected</string>
+    <string name="provider_select_title">Select Provider</string>
+</resources>
