@@ -36,6 +36,7 @@ sealed class Screen(val route: String) {
     data object SettingsPlayerUI : Screen("settings/player_ui")
     data object SettingsAudio : Screen("settings/audio")
     data object SettingsAbout : Screen("settings/about")
+    data object SettingsLicenses : Screen("settings/licenses")
     data object Search : Screen("search")
     data object Permission : Screen("permission")
 }
@@ -209,6 +210,13 @@ fun NavGraph(
 
         composable(Screen.SettingsAbout.route) {
             com.ngt.pixplay.ui.screens.settings.SettingsAboutScreen(
+                onBackClick = { navController.popBackStack() },
+                onLicensesClick = { navController.navigate(Screen.SettingsLicenses.route) }
+            )
+        }
+
+        composable(Screen.SettingsLicenses.route) {
+            com.ngt.pixplay.ui.screens.settings.SettingsLicensesScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
