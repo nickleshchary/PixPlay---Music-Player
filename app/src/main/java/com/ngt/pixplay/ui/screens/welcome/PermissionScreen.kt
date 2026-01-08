@@ -14,6 +14,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Delete
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,6 +35,7 @@ fun PermissionScreen(
     // Track permission states
     var isAudioGranted by remember { mutableStateOf(false) }
     var isNotificationGranted by remember { mutableStateOf(false) }
+    var isManageStorageGranted by remember { mutableStateOf(false) }
     
     // Function to check permissions
     fun checkPermissions() {
@@ -42,6 +45,10 @@ fun PermissionScreen(
         } else {
             isAudioGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             isNotificationGranted = true // Not required on older versions
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            isManageStorageGranted = android.os.Environment.isExternalStorageManager()
         }
     }
     
@@ -140,6 +147,28 @@ fun PermissionScreen(
                 isGranted = isNotificationGranted,
                 onGrantClick = {
                     notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            )
+        }
+
+        // All Files Access (Android 11+) for Deletion
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Spacer(modifier = Modifier.height(16.dp))
+            PermissionItem(
+                title = "File Access",
+                description = "Required to read, modify and delete system files.",
+                icon = Icons.Filled.Delete,
+                isGranted = isManageStorageGranted,
+                onGrantClick = {
+                    try {
+                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+                            data = Uri.parse("package:${context.packageName}")
+                        }
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                        context.startActivity(intent)
+                    }
                 }
             )
         }

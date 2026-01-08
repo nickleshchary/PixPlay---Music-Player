@@ -6,8 +6,11 @@ import com.ngt.pixplay.data.model.Album
 import com.ngt.pixplay.data.model.Artist
 import com.ngt.pixplay.data.model.AudioItem
 import com.ngt.pixplay.data.model.Playlist
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import java.io.File
+import android.os.Build
+import android.os.Environment
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -324,10 +327,37 @@ class MusicRepository @Inject constructor(
          // 1. Get IDs
          val ids = songs.map { it.id }
          
-         // 2. Try Android R+ approach first
-         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-             return audioScanner.getDeleteIntent(ids)
+         // 2. Try Android R+ approach
+     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+         // If we have MANAGE_EXTERNAL_STORAGE, delete directly
+         if (Environment.isExternalStorageManager()) {
+             try {
+                 for (song in songs) {
+                     // 1. Delete actual file
+                     val file = File(song.path)
+                     if (file.exists()) {
+                         file.delete()
+                     }
+                     // 2. Remove from MediaStore (this updates system index)
+                     try {
+                         audioScanner.deleteAudioDirectly(song.id)
+                     } catch (e: Exception) {
+                         // Ignore, file is already gone or permission issue (unlikely with Manage Storage)
+                     }
+                     
+                     // 3. Remove from DB
+                     songDao.deleteSongById(song.id)
+                     favoriteDao.deleteFavoriteSong(song.id)
+                 }
+                 return null // Success, no permission flow needed
+             } catch (e: Exception) {
+                 e.printStackTrace()
+                 // Fallback to standard flow if something somehow fails?
+             }
          }
+         
+         return audioScanner.getDeleteIntent(ids)
+     }
          
          // 3. For Q and below, try direct delete
          // Note: We only delete the FIRST one for now to trigger permission if needed, 

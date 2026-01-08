@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PixPlay"
 include(":app")
-include(":material3")
+
